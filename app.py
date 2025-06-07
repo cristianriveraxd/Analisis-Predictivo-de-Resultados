@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 import pandas as pd
 import networkx as nx
@@ -58,7 +58,7 @@ def procesar_estadisticas(matches):
     df = df.sort_values(by=["Puntos", "GolesFavor"], ascending=False).reset_index(drop=True)
     return df
 
-def crear_grafico(df):
+def crear_grafico_general(df):
     fig = px.scatter(
         df, x="GolesContra", y="GolesFavor", size="Puntos", color="Equipo",
         hover_name="Equipo", text="Equipo",
@@ -68,12 +68,45 @@ def crear_grafico(df):
     )
     fig.update_traces(textposition='top center')
     return pio.to_html(fig, full_html=False)
+
+def crear_grafico_por_equipo(matches, equipo_filtrado=None):
+    data = []
+    for match in matches:
+        if match['status'] != 'FINISHED':
+            continue
+
+        jornada = match['matchday']
+        home = match['homeTeam']['name']
+        away = match['awayTeam']['name']
+        g_home = match['score']['fullTime']['home']
+        g_away = match['score']['fullTime']['away']
+
+        if g_home is not None and g_away is not None:
+            data.append({'Equipo': home, 'Jornada': jornada, 'Goles': g_home})
+            data.append({'Equipo': away, 'Jornada': jornada, 'Goles': g_away})
+
+    df_evolucion = pd.DataFrame(data)
+    if equipo_filtrado:
+        df_evolucion = df_evolucion[df_evolucion['Equipo'] == equipo_filtrado]
+
+    fig = px.line(df_evolucion, x="Jornada", y="Goles", color="Equipo", markers=True,
+                  title="Evolución de Goles por Equipo", width=900, height=500)
+    return pio.to_html(fig, full_html=False)
 @app.route("/dashboard")
 def dashboard():
+    equipo = request.args.get("equipo")
     matches = cargar_datos()
     df_stats = procesar_estadisticas(matches)
-    grafico_html = crear_grafico(df_stats)
-    return render_template("dashboard.html", tabla=df_stats.to_dict(orient="records"), grafico=grafico_html)
+    grafico_html = crear_grafico_general(df_stats)
+    grafico_equipos = crear_grafico_por_equipo(matches, equipo_filtrado=equipo)
+    nombres_equipos = sorted(df_stats['Equipo'].unique())
+
+    return render_template("dashboard.html", 
+                           tabla=df_stats.to_dict(orient="records"), 
+                           grafico=grafico_html,
+                           grafico_equipos=grafico_equipos,
+                           equipos=nombres_equipos,
+                           equipo_seleccionado=equipo)
 
 
 
