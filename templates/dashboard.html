@@ -163,9 +163,19 @@
     </div>
 </form>-->
 
-<div>{{ grafico_equipos | safe }}</div>
-<h3 class="mt-5">Total de Goles por Equipo</h3>
-<div>{{ grafico_barras | safe }}</div>
+<!-- Sección: Total de Goles por Equipo -->
+<section class="mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      📊 Total de Goles por Equipo
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-center">
+        <div>{{ grafico_barras | safe }}</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <div class="mb-4">
     <a href="/descargar/excel" class="btn btn-success me-2">📥 Descargar Excel</a>
