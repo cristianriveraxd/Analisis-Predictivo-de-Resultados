@@ -372,4 +372,5 @@ def descargar_pdf():
 if __name__ == '__main__':
     if not os.path.exists("static"):
         os.makedirs("static")
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
