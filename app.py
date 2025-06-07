@@ -15,8 +15,7 @@ API_KEY = '8778d28069434fbd8dc0e71d71120869'
 HEADERS = {'X-Auth-Token': API_KEY}
 MATCHES_URL = "https://api.football-data.org/v4/competitions/CL/matches"
 
-<<<<<<< Updated upstream
-=======
+
 def generar_grafo(partidos):
     G = nx.DiGraph()
 
@@ -74,10 +73,9 @@ def generar_grafo(partidos):
     plt.tight_layout()
     plt.savefig("static/grafo.png")
     plt.close()
->>>>>>> Stashed changes
 
 @app.route('/')
-def puntos_vs_partidos():
+def index():
     response = requests.get(MATCHES_URL, headers=HEADERS)
 
     if response.status_code != 200:
@@ -93,19 +91,12 @@ def puntos_vs_partidos():
 
         home = match['homeTeam']['name']
         away = match['awayTeam']['name']
-        score = match['score']['fullTime']
-        home_goals = score['home']
-        away_goals = score['away']
+        home_goals = match['score']['fullTime']['home']
+        away_goals = match['score']['fullTime']['away']
 
         if home_goals is None or away_goals is None:
             continue
 
-<<<<<<< Updated upstream
-=======
-        if home_goals is None or away_goals is None:
-            continue
-
->>>>>>> Stashed changes
         for equipo in [home, away]:
             if equipo not in puntos_por_equipo:
                 puntos_por_equipo[equipo] = {'Partidos': 0, 'Puntos': 0}
@@ -124,15 +115,9 @@ def puntos_vs_partidos():
     df = pd.DataFrame([
         {'Equipo': equipo, 'Partidos': datos['Partidos'], 'Puntos': datos['Puntos']}
         for equipo, datos in puntos_por_equipo.items()
-<<<<<<< Updated upstream
-    ])
-    df = df.sort_values(by='Puntos', ascending=False)
-
-=======
     ]).sort_values(by='Puntos', ascending=False)
 
     # Regresión lineal
->>>>>>> Stashed changes
     X = df[['Partidos']]
     y = df['Puntos']
     modelo = LinearRegression().fit(X, y)
@@ -140,10 +125,7 @@ def puntos_vs_partidos():
     interseccion = modelo.intercept_
     r2 = modelo.score(X, y)
 
-<<<<<<< Updated upstream
-=======
     # Gráfico de regresión
->>>>>>> Stashed changes
     plt.figure(figsize=(10, 6))
     plt.scatter(df['Partidos'], df['Puntos'], color='blue', label='Datos reales')
     plt.plot(df['Partidos'], modelo.predict(X), color='red', label='Regresión lineal')
@@ -165,76 +147,6 @@ def puntos_vs_partidos():
                            r2=round(r2, 3),
                            plot_url="static/plot.png",
                            output_url="static/grafo.png")
-
-
-@app.route('/localVsVisitante')
-def goles_local_vs_visitante():
-    response = requests.get(MATCHES_URL, headers=HEADERS)
-
-    if response.status_code != 200:
-        return render_template("goles.html", error="No se pudieron obtener los partidos.")
-
-    data = response.json()
-    partidos = data.get('matches', [])
-
-    goles_por_equipo = {}
-
-    for match in partidos:
-        if match['status'] != "FINISHED":
-            continue
-
-        home = match['homeTeam']['name']
-        away = match['awayTeam']['name']
-        score = match['score']['fullTime']
-        home_goals = score['home']
-        away_goals = score['away']
-
-        if home_goals is None or away_goals is None:
-            continue
-
-        if home not in goles_por_equipo:
-            goles_por_equipo[home] = {'Local': 0, 'Visitante': 0}
-        if away not in goles_por_equipo:
-            goles_por_equipo[away] = {'Local': 0, 'Visitante': 0}
-
-        goles_por_equipo[home]['Local'] += home_goals
-        goles_por_equipo[away]['Visitante'] += away_goals
-
-    df = pd.DataFrame([
-        {'Equipo': equipo, 'GolesLocal': datos['Local'], 'GolesVisitante': datos['Visitante']}
-        for equipo, datos in goles_por_equipo.items()
-    ])
-
-    X = df[['GolesLocal']]
-    y = df['GolesVisitante']
-    modelo = LinearRegression().fit(X, y)
-
-    pendiente = modelo.coef_[0]
-    interseccion = modelo.intercept_
-    r2 = modelo.score(X, y)
-
-    plt.figure(figsize=(10, 6))
-    plt.scatter(df['GolesLocal'], df['GolesVisitante'], color='green', label='Datos reales')
-    plt.plot(df['GolesLocal'], modelo.predict(X), color='orange', label='Regresión lineal')
-    plt.xlabel('Goles de Local')
-    plt.ylabel('Goles de Visitante')
-    plt.title('Regresión Lineal: Goles Visitante vs Goles Local')
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plot_path = "static/goles.png"
-    plt.savefig(plot_path)
-    plt.close()
-
-    return render_template("goles.html",
-                           equipos=df.to_dict(orient='records'),
-                           pendiente=round(pendiente, 2),
-                           interseccion=round(interseccion, 2),
-                           r2=round(r2, 3),
-                           plot_url=plot_path)
-    
-    
-    
 
 if __name__ == '__main__':
     if not os.path.exists("static"):
