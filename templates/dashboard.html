@@ -24,23 +24,52 @@
     </style>
 </head>
 <body class="bg-light">
-    
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+      <div class="container">
+        <!-- Logo alineado a la izquierda -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <i class="bi bi-bar-chart-line-fill fs-4 me-2 text-warning"></i>
+          <strong>Champions Insights</strong>
+        </a>
+
+        <!-- Botón de hamburguesa para dispositivos móviles -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navMenu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menú de navegación alineado a la derecha -->
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="bi bi-bar-chart-line"></i> Puntos vs Partidos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/localVsVisitante">
+                <i class="bi bi-diagram-3"></i> Goles Local vs Visitante
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav> 
 <div class="container py-5">
       <h1 class="mb-4 text-center">
         <i class="bi bi-easel"></i> Regresión: Puntos vs Partidos
       </h1>
- <!-- Menú de navegación -->
-      <nav class="mb-4 text-center">
-        <a href="/" class="btn btn-outline-primary me-2">
-          <i class="bi bi-bar-chart-line"></i> Puntos vs Partidos
-        </a>
-        <a href="/localVsVisitante" class="btn btn-outline-secondary me-2">
-          <i class="bi bi-bar-chart-line"></i> Goles Local vs Visitante
-        </a>
-        <a href="/dashboard" class="btn btn-outline-secondary me-2">
-          <i class="bi bi-speedometer2"></i> Dashboard
-        </a>
-      </nav>
+ 
     <h3 class="mb-3 pt-4">Tabla de Posiciones</h3>
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle text-center">
