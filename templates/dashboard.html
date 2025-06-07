@@ -97,8 +97,51 @@
             </tbody>
         </table>
     </div>
+<br>
+<!-- Sección con los dos gráficos uno sobre otro -->
+ <h1 class="mb-4 text-center">
+        <i class="bi bi-life-preserver"></i> Goles a Favor vs Goles en Contra
+      </h1>
+<section class="mt-5">
+  <!-- Gráfico 1: Goles a Favor vs Goles en Contra -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-dark text-white">
+      📊 Goles a Favor vs Goles en Contra
+    </div>
+    <div class="d-flex justify-content-center">
+      <div>{{ grafico | safe }}</div>
+    </div>
+  </div>
 
-    <h3 class="mt-5">Gráfico Interactivo: Goles a Favor vs Goles en Contra</h3>
+  <!-- Gráfico 2: Evolución de Goles por Equipo -->
+    <h1 class="mb-4 text-center">
+        <i class="bi bi-fast-forward-circle-fill"></i> Evolución de Goles por Equipo
+      </h1>
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-dark text-white">
+      📈 Evolución de Goles por Equipo
+    </div>
+    <div class="card-body">
+      <form method="get" class="mb-3">
+        <div class="mb-3">
+          <label for="equipo" class="form-label">Selecciona un equipo:</label>
+          <select name="equipo" id="equipo" class="form-select">
+            <option value="">Todos</option>
+            {% for eq in equipos %}
+              <option value="{{ eq }}" {% if eq == equipo_seleccionado %}selected{% endif %}>{{ eq }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+      </form>
+      <div class="d-flex justify-content-center">
+      <div>{{ grafico_equipos | safe }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+   <!-- <h3 class="mt-5">Gráfico Interactivo: Goles a Favor vs Goles en Contra</h3>
     <div>{{ grafico | safe }}</div>
 </div>
 <h3 class="mt-5">Evolución de Goles por Equipo</h3>
@@ -120,9 +163,19 @@
     </div>
 </form>
 
-<div>{{ grafico_equipos | safe }}</div>
-<h3 class="mt-5">Total de Goles por Equipo</h3>
-<div>{{ grafico_barras | safe }}</div>
+<!-- Sección: Total de Goles por Equipo -->
+<section class="mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      📊 Total de Goles por Equipo
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-center">
+        <div>{{ grafico_barras | safe }}</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <div class="mb-4">
     <a href="/descargar/excel" class="btn btn-success me-2">📥 Descargar Excel</a>
