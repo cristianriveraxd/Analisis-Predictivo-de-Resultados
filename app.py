@@ -74,6 +74,73 @@ def generar_grafo(partidos):
     plt.savefig("static/grafo.png")
     plt.close()
 
+@app.route('/localVsVisitante')
+def goles_local_vs_visitante():
+    response = requests.get(MATCHES_URL, headers=HEADERS)
+
+    if response.status_code != 200:
+        return render_template("goles.html", error="No se pudieron obtener los partidos.")
+
+    data = response.json()
+    partidos = data.get('matches', [])
+
+    goles_por_equipo = {}
+
+    for match in partidos:
+        if match['status'] != "FINISHED":
+            continue
+
+        home = match['homeTeam']['name']
+        away = match['awayTeam']['name']
+        score = match['score']['fullTime']
+        home_goals = score['home']
+        away_goals = score['away']
+
+        if home_goals is None or away_goals is None:
+            continue
+
+        if home not in goles_por_equipo:
+            goles_por_equipo[home] = {'Local': 0, 'Visitante': 0}
+        if away not in goles_por_equipo:
+            goles_por_equipo[away] = {'Local': 0, 'Visitante': 0}
+
+        goles_por_equipo[home]['Local'] += home_goals
+        goles_por_equipo[away]['Visitante'] += away_goals
+
+    df = pd.DataFrame([
+        {'Equipo': equipo, 'GolesLocal': datos['Local'], 'GolesVisitante': datos['Visitante']}
+        for equipo, datos in goles_por_equipo.items()
+    ])
+
+    X = df[['GolesLocal']]
+    y = df['GolesVisitante']
+    modelo = LinearRegression().fit(X, y)
+
+    pendiente = modelo.coef_[0]
+    interseccion = modelo.intercept_
+    r2 = modelo.score(X, y)
+
+    plt.figure(figsize=(10, 6))
+    plt.scatter(df['GolesLocal'], df['GolesVisitante'], color='green', label='Datos reales')
+    plt.plot(df['GolesLocal'], modelo.predict(X), color='orange', label='Regresión lineal')
+    plt.xlabel('Goles de Local')
+    plt.ylabel('Goles de Visitante')
+    plt.title('Regresión Lineal: Goles Visitante vs Goles Local')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plot_path = "static/goles.png"
+    plt.savefig(plot_path)
+    plt.close()
+
+    return render_template("goles.html",
+                           equipos=df.to_dict(orient='records'),
+                           pendiente=round(pendiente, 2),
+                           interseccion=round(interseccion, 2),
+                           r2=round(r2, 3),
+                           plot_url=plot_path,
+                           output_url="static/grafo.png")
+
 @app.route('/')
 def index():
     response = requests.get(MATCHES_URL, headers=HEADERS)
