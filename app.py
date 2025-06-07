@@ -10,7 +10,7 @@ import json
 import os
 import plotly.express as px
 import plotly.io as pio
-
+from datetime import datetime
 app = Flask(__name__)
 
 API_KEY = '8778d28069434fbd8dc0e71d71120869'
@@ -307,7 +307,8 @@ def index():
                            interseccion=round(interseccion, 2),
                            r2=round(r2, 3),
                            plot_url="static/plot.png",
-                           output_url="static/grafo.png")
+                           output_url="static/grafo.png",
+                           current_year=datetime.now().year)
 
 if __name__ == '__main__':
     if not os.path.exists("static"):
