@@ -55,7 +55,7 @@ El flujo de datos sigue una arquitectura moderna tipo ​*data lakehouse*​, in
 1. Clona este repositorio
 ```#
 git clone https://github.com/cristianriveraxd/Analisis-Predictivo-de-Resultados.git
-cd proyecto-regresion
+cd Analisis-Predictivo-de-Resultados
 ```
 2. Instala dependencias
 ```#
@@ -65,6 +65,63 @@ pip install -r requirements.txt
 ```#
 python app.py
 ```
+***
+
+## 🚀 Despliegue en EC2 (AWS) con docker
+1. Clona este repositorio en la instancia generada
+```#
+git clone https://github.com/cristianriveraxd/Analisis-Predictivo-de-Resultados.git
+
+```
+2. Configurar app.py para despliegue en producción
+```#
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+```
+3. Instalar docker y python en ubuntu
+```#
+# Actualizar repositorios
+sudo apt update
+
+# Instalar dependencias necesarias
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg
+
+# Agregar la clave GPG oficial de Docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker.gpg
+
+# Agregar el repositorio de Docker
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Actualizar de nuevo e instalar Docker
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+# Verificar que Docker está instalado
+docker --version
+
+# Habilitar Docker al inicio y arrancarlo
+sudo systemctl enable docker
+sudo systemctl start docker
+
+# (Opcional) Ejecutar Docker sin sudo
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Python y pip
+sudo apt install -y python3 python3-pip
+
+```
+4. Construye y ejecuta el contenedor en EC2
+```#
+cd Analisis-Predictivo-de-Resultados
+docker build -t flask-champions .
+docker run -d -p 5000:5000 flask-champions
+```
+*Si tienes problemas para acceder a la pagina verifica los puertos accesibles en AWS, en tu instancia *
+
 ***
 ## 🧠 Resultados y visualizaciones
 
