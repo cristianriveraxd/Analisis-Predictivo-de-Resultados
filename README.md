@@ -75,6 +75,10 @@ A través de gráficos generados dinámicamente, se analizan relaciones como:
 * **Goles local vs. goles visitante**
   ![image](https://github.com/user-attachments/assets/6770abf6-ec0f-4e39-b1df-0c86c4a1ebce)
 
+* **Grafos obtenidos**
+  ![image](https://github.com/user-attachments/assets/0f4b12ac-2324-4584-a1d0-dafdd3ba3423)
+
+
 Cada gráfico incluye:
 
 * Datos reales (puntos)
