@@ -1,10 +1,12 @@
 from flask import Flask, render_template
 import requests
 import pandas as pd
+import networkx as nx
 from sklearn.linear_model import LinearRegression
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import json
 import os
 
 app = Flask(__name__)
@@ -13,6 +15,66 @@ API_KEY = '8778d28069434fbd8dc0e71d71120869'
 HEADERS = {'X-Auth-Token': API_KEY}
 MATCHES_URL = "https://api.football-data.org/v4/competitions/CL/matches"
 
+<<<<<<< Updated upstream
+=======
+def generar_grafo(partidos):
+    G = nx.DiGraph()
+
+    for match in partidos:
+        if match["status"] != "FINISHED":
+            continue
+
+        home = match["homeTeam"]["name"]
+        away = match["awayTeam"]["name"]
+        home_goals = match["score"]["fullTime"]["home"]
+        away_goals = match["score"]["fullTime"]["away"]
+
+        if home_goals is None or away_goals is None:
+            continue
+
+        if home_goals > 0:
+            if G.has_edge(home, away):
+                G[home][away]["weight"] += home_goals
+            else:
+                G.add_edge(home, away, weight=home_goals)
+
+        if away_goals > 0:
+            if G.has_edge(away, home):
+                G[away][home]["weight"] += away_goals
+            else:
+                G.add_edge(away, home, weight=away_goals)
+
+    if G.number_of_nodes() == 0:
+        return
+
+    plt.figure(figsize=(14, 12))
+    pos = nx.spring_layout(G, k=1.0, seed=42)
+    nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=1000)
+    nx.draw_networkx_labels(G, pos, font_size=10)
+
+    for u, v, data in G.edges(data=True):
+        weight = data["weight"]
+        rad = 0.3 if G.has_edge(v, u) else 0.1
+        nx.draw_networkx_edges(
+            G, pos,
+            edgelist=[(u, v)],
+            arrowstyle='-|>',
+            arrowsize=30,
+            width=1,
+            connectionstyle=f'arc3,rad={rad}',
+            edge_color='black'
+        )
+        x = (pos[u][0] + pos[v][0]) / 2
+        y = (pos[u][1] + pos[v][1]) / 2
+        plt.text(x, y, str(weight), fontsize=10, ha='center', va='center',
+                 bbox=dict(facecolor='white', edgecolor='none', alpha=0.3))
+
+    plt.title("Grafo de goles entre equipos", fontsize=16)
+    plt.axis("off")
+    plt.tight_layout()
+    plt.savefig("static/grafo.png")
+    plt.close()
+>>>>>>> Stashed changes
 
 @app.route('/')
 def puntos_vs_partidos():
@@ -25,7 +87,6 @@ def puntos_vs_partidos():
     partidos = data.get('matches', [])
 
     puntos_por_equipo = {}
-
     for match in partidos:
         if match['status'] != "FINISHED":
             continue
@@ -39,6 +100,12 @@ def puntos_vs_partidos():
         if home_goals is None or away_goals is None:
             continue
 
+<<<<<<< Updated upstream
+=======
+        if home_goals is None or away_goals is None:
+            continue
+
+>>>>>>> Stashed changes
         for equipo in [home, away]:
             if equipo not in puntos_por_equipo:
                 puntos_por_equipo[equipo] = {'Partidos': 0, 'Puntos': 0}
@@ -57,17 +124,26 @@ def puntos_vs_partidos():
     df = pd.DataFrame([
         {'Equipo': equipo, 'Partidos': datos['Partidos'], 'Puntos': datos['Puntos']}
         for equipo, datos in puntos_por_equipo.items()
+<<<<<<< Updated upstream
     ])
     df = df.sort_values(by='Puntos', ascending=False)
 
+=======
+    ]).sort_values(by='Puntos', ascending=False)
+
+    # Regresión lineal
+>>>>>>> Stashed changes
     X = df[['Partidos']]
     y = df['Puntos']
     modelo = LinearRegression().fit(X, y)
-
     pendiente = modelo.coef_[0]
     interseccion = modelo.intercept_
     r2 = modelo.score(X, y)
 
+<<<<<<< Updated upstream
+=======
+    # Gráfico de regresión
+>>>>>>> Stashed changes
     plt.figure(figsize=(10, 6))
     plt.scatter(df['Partidos'], df['Puntos'], color='blue', label='Datos reales')
     plt.plot(df['Partidos'], modelo.predict(X), color='red', label='Regresión lineal')
@@ -77,16 +153,18 @@ def puntos_vs_partidos():
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plot_path = "static/plot.png"
-    plt.savefig(plot_path)
+    plt.savefig("static/plot.png")
     plt.close()
+
+    generar_grafo(partidos)
 
     return render_template("index.html",
                            equipos=df.to_dict(orient='records'),
                            pendiente=round(pendiente, 2),
                            interseccion=round(interseccion, 2),
                            r2=round(r2, 3),
-                           plot_url=plot_path)
+                           plot_url="static/plot.png",
+                           output_url="static/grafo.png")
 
 
 @app.route('/localVsVisitante')
@@ -159,4 +237,6 @@ def goles_local_vs_visitante():
     
 
 if __name__ == '__main__':
+    if not os.path.exists("static"):
+        os.makedirs("static")
     app.run(debug=True)
