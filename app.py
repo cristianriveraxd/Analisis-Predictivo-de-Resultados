@@ -94,7 +94,12 @@ def crear_grafico_por_equipo(matches, equipo_filtrado=None):
 
     fig = px.line(df_evolucion, x="Jornada", y="Goles", color="Equipo", markers=True,
                   title="Evolución de Goles por Equipo", width=900, height=500)
-   
+    hti = Html2Image()
+    hti.screenshot(
+    html_str=pio.to_html(fig, full_html=True),
+    save_as="goles_equipo.png",
+    size=(1500, 1100))
+    return pio.to_html(fig, full_html=False)
 def crear_grafico_barras(df):
     fig = px.bar(df, x="Equipo", y="GolesFavor", color="Equipo",
                  title="Total de Goles a Favor por Equipo", 
