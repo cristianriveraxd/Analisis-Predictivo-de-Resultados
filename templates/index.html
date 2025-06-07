@@ -88,9 +88,17 @@
           />
         </div>
       </div>
+      
+      <!--Spinner-->
+      <div id="spinner" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
 
+      <!--Table-->
       <h4 class="mb-3">Tabla de Equipos:</h4>
-      <table id="tabla-equipos" class="table table-striped">
+      <table id="tabla-equipos" class="table table-striped d-none">
         <thead class="table-light">
           <tr>
             <th>Equipo</th>
@@ -169,13 +177,19 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script>
       $(document).ready(function () {
-        $("#tabla-equipos").DataTable({
+        var tabla = $("#tabla-equipos").DataTable({
           language: {
             url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
           },
           paging: false,
           info: false,
-          order: [[2, "desc"]],
+          order: [[2, "desc"]], // Orden por puntos al cargar
+          initComplete: function (settings, json) {
+            // Ocultar spinner
+            $("#spinner").hide();
+            // Mostrar tabla
+            $("#tabla-equipos").removeClass("d-none");
+          },
         });
       });
     </script>
