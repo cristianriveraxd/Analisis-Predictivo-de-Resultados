@@ -73,22 +73,48 @@
       {% else %}
       <div class="row mb-4">
         <div class="col-md-6">
-          <h4>Parámetros del modelo:</h4>
-          <ul>
-            <li><strong>Pendiente:</strong> {{ pendiente }}</li>
-            <li><strong>Intersección:</strong> {{ interseccion }}</li>
-            <li><strong>R²:</strong> {{ r2 }}</li>
+          <h4 class="mb-3">Parámetros del modelo:</h4>
+          <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item">
+              <strong>Pendiente:</strong> {{ pendiente }}
+            </li>
+            <li class="list-group-item">
+              <strong>Intersección:</strong> {{ interseccion }}
+            </li>
+            <li class="list-group-item"><strong>R²:</strong> {{ r2 }}</li>
           </ul>
+
+          <!-- Texto explicativo justo debajo de R² -->
+          <div class="alert alert-light border rounded shadow-sm">
+            <p class="mb-0 text-justify">
+              Este gráfico muestra la relación entre los
+              <strong>partidos jugados</strong> por cada equipo (eje X) y los
+              <strong>puntos obtenidos</strong> (eje Y). Los puntos azules
+              representan los datos reales de cada equipo, mientras que la línea
+              roja es la <strong>regresión lineal</strong> que modela esta
+              relación.
+            </p>
+            <ul>
+              <li>
+                <strong>Tendencia positiva:</strong> La pendiente de la línea es
+                <strong>positiva</strong>, lo que indica que, en general,
+                <em
+                  >a mayor número de partidos jugados, mayor cantidad de puntos
+                  obtenidos</em
+                >.
+              </li>
+          </div>
         </div>
+
         <div class="col-md-6 text-center">
           <img
             src="{{ plot_url }}"
             alt="Gráfico de regresión"
-            class="img-fluid rounded border"
+            class="img-fluid rounded shadow-sm border"
           />
         </div>
       </div>
-      
+
       <!--Spinner-->
       <div id="spinner" class="text-center my-4">
         <div class="spinner-border text-primary" role="status">
