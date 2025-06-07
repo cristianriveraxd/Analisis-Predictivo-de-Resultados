@@ -165,7 +165,7 @@ def generar_grafo(partidos):
 
     plt.figure(figsize=(14, 12))
     pos = nx.spring_layout(G, k=1.0, seed=42)
-    nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=1000)
+    nx.draw_networkx_nodes(G, pos, node_color="#7474e5", node_size=2000)
     nx.draw_networkx_labels(G, pos, font_size=10)
 
     for u, v, data in G.edges(data=True):
