@@ -24,8 +24,7 @@
     </style>
 </head>
 <body class="bg-light">
-    <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
       <div class="container">
         <!-- Logo alineado a la izquierda -->
         <a class="navbar-brand d-flex align-items-center" href="/">
@@ -64,118 +63,148 @@
           </ul>
         </div>
       </div>
-    </nav> 
-<div class="container py-5">
-      <h1 class="mb-4 text-center">
-        <i class="bi bi-easel"></i> Regresión: Puntos vs Partidos
-      </h1>
- 
-    <h3 class="mb-3 pt-4">Tabla de Posiciones</h3>
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered align-middle text-center">
-            <thead class="table-dark">
+    </nav>
+    <div class="container py-5">
+  <h1 class="mb-5 text-center">
+    <i class="bi bi-easel"></i> Análisis predictivo champions league
+  </h1>
+
+  <!-- Accordion -->
+  <div class="accordion" id="dashboardAccordion">
+
+    <!-- Tabla de Posiciones -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTabla">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTabla" aria-expanded="true" aria-controls="collapseTabla">
+          🏆 Tabla de Posiciones
+        </button>
+      </h2>
+      <div id="collapseTabla" class="accordion-collapse collapse show" aria-labelledby="headingTabla" data-bs-parent="#dashboardAccordion">
+        <div class="accordion-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered text-center align-middle">
+              <thead class="table-dark">
                 <tr>
-                    <th>#</th>
-                    <th>Equipo</th>
-                    <th>Partidos</th>
-                    <th>Puntos</th>
-                    <th>Goles a Favor</th>
-                    <th>Goles en Contra</th>
+                  <th>#</th>
+                  <th>Equipo</th>
+                  <th>Partidos</th>
+                  <th>Puntos</th>
+                  <th>Goles a Favor</th>
+                  <th>Goles en Contra</th>
                 </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
                 {% for fila in tabla %}
                 <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ fila.Equipo }}</td>
-                    <td>{{ fila.Partidos }}</td>
-                    <td>{{ fila.Puntos }}</td>
-                    <td>{{ fila.GolesFavor }}</td>
-                    <td>{{ fila.GolesContra }}</td>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ fila.Equipo }}</td>
+                  <td>{{ fila.Partidos }}</td>
+                  <td>{{ fila.Puntos }}</td>
+                  <td>{{ fila.GolesFavor }}</td>
+                  <td>{{ fila.GolesContra }}</td>
                 </tr>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-<br>
-<!-- Sección con los dos gráficos uno sobre otro -->
- <h1 class="mb-4 text-center">
-        <i class="bi bi-life-preserver"></i> Goles a Favor vs Goles en Contra
-      </h1>
-<section class="mt-5">
-  <!-- Gráfico 1: Goles a Favor vs Goles en Contra -->
-  <div class="card shadow-sm mb-5">
-    <div class="card-header bg-dark text-white">
-      📊 Goles a Favor vs Goles en Contra
-    </div>
-    <div class="d-flex justify-content-center">
-      <div>{{ grafico | safe }}</div>
-    </div>
-  </div>
-
-  <!-- Gráfico 2: Evolución de Goles por Equipo -->
-    <h1 class="mb-4 text-center">
-        <i class="bi bi-fast-forward-circle-fill"></i> Evolución de Goles por Equipo
-      </h1>
-  <div class="card shadow-sm mb-5">
-    <div class="card-header bg-dark text-white">
-      📈 Evolución de Goles por Equipo
-    </div>
-    <div class="card-body">
-      <form method="get" class="mb-3">
-        <div class="mb-3">
-          <label for="equipo" class="form-label">Selecciona un equipo:</label>
-          <select name="equipo" id="equipo" class="form-select">
-            <option value="">Todos</option>
-            {% for eq in equipos %}
-              <option value="{{ eq }}" {% if eq == equipo_seleccionado %}selected{% endif %}>{{ eq }}</option>
-            {% endfor %}
-          </select>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-      </form>
-      <div class="d-flex justify-content-center">
-      <div>{{ grafico_equipos | safe }}</div>
       </div>
     </div>
-  </div>
-</section>
 
-   <!-- <h3 class="mt-5">Gráfico Interactivo: Goles a Favor vs Goles en Contra</h3>
-    <div>{{ grafico | safe }}</div>
-</div>
-<h3 class="mt-5">Evolución de Goles por Equipo</h3>
+    <!-- Goles a Favor vs Contra -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingGrafico1">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGrafico1" aria-expanded="false" aria-controls="collapseGrafico1">
+          📊 Goles a Favor vs Goles en Contra
+        </button>
+      </h2>
+      <div id="collapseGrafico1" class="accordion-collapse collapse" aria-labelledby="headingGrafico1" data-bs-parent="#dashboardAccordion">
+        <div class="accordion-body">
+          <div class="d-flex justify-content-center">{{ grafico | safe }}</div>
+        </div>
+      </div>
+    </div>
 
-<form method="get" class="mb-4">
-    <div class="row g-2 align-items-end">
-        <div class="col-md-6">
+    <!-- Evolución por Equipo -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingEvolucion">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEvolucion" aria-expanded="false" aria-controls="collapseEvolucion">
+          📈 Evolución de Goles por Equipo
+        </button>
+      </h2>
+      <div id="collapseEvolucion" class="accordion-collapse collapse" aria-labelledby="headingEvolucion" data-bs-parent="#dashboardAccordion">
+        <div class="accordion-body">
+          <form method="get" class="mb-3">
             <label for="equipo" class="form-label">Selecciona un equipo:</label>
-            <select name="equipo" id="equipo" class="form-select">
-                <option value="">Todos</option>
-                {% for eq in equipos %}
-                    <option value="{{ eq }}" {% if eq == equipo_seleccionado %}selected{% endif %}>{{ eq }}</option>
-                {% endfor %}
+            <select name="equipo" id="equipo" class="form-select mb-3">
+              <option value="">Todos</option>
+              {% for eq in equipos %}
+              <option value="{{ eq }}" {% if eq == equipo_seleccionado %}selected{% endif %}>{{ eq }}</option>
+              {% endfor %}
             </select>
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+          </form>
+          <div class="d-flex justify-content-center">{{ grafico_equipos | safe }}</div>
         </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-        </div>
+      </div>
     </div>
-</form>
 
-<!-- Sección: Total de Goles por Equipo -->
-<div class="card shadow-sm">
-  <div class="card-header bg-dark text-white">
-    ⚽
-  </div>
-  <div class="card-body">
-    <div class="d-flex justify-content-center">
-      <canvas id="futbolCanvas" width="300" height="200"></canvas>
+    <!-- Goles por Equipo -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingBarras">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBarras" aria-expanded="false" aria-controls="collapseBarras">
+          📊 Total de Goles por Equipo
+        </button>
+      </h2>
+      <div id="collapseBarras" class="accordion-collapse collapse" aria-labelledby="headingBarras" data-bs-parent="#dashboardAccordion">
+        <div class="accordion-body">
+          <div class="d-flex justify-content-center">{{ grafico_barras | safe }}</div>
+        </div>
+      </div>
     </div>
+
   </div>
+
+  <!-- Botones de descarga centrados -->
+  <div class="d-flex justify-content-center gap-3 my-5">
+    <a href="/descargar/excel" class="btn btn-success">
+      📥 Descargar Excel
+    </a>
+    <a href="/descargar/pdf" class="btn btn-danger">
+      📄 Descargar PDF
+    </a>
+  </div>
+
 </div>
 
-<script>
+
+ <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start mt-5 border-top">
+      <div class="container py-3">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-md-start text-center mb-2 mb-md-0">
+            <span class="text-muted"
+              >© {{ current_year }} Champions League Analyzer</span
+            >
+          </div>
+          <div class="col-md-6 text-md-end text-center">
+            <a
+              href="https://github.com/cristianriveraxd/Analisis-Predictivo-de-Resultados"
+              class="text-decoration-none me-3"
+              target="_blank"
+            >
+              <i class="bi bi-github"></i> GitHub
+            </a>
+            <a href="/" class="text-decoration-none">
+              <i class="bi bi-house-door-fill"></i> Inicio
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
   const canvas = document.getElementById('futbolCanvas');
   const ctx = canvas.getContext('2d');
 
@@ -209,50 +238,5 @@
   ctx.fillRect(0, 80, 10, 40);
   ctx.fillRect(290, 80, 10, 40);
 </script>
-<br>
- <h1 class="mb-4 text-center">
-        <i class="bi bi-sunset"></i> Total de Goles por Equipo
-      </h1>
-<section class="mt-5">
-  <div class="card shadow-sm">
-    <div class="card-header bg-dark text-white">
-      📊 Total de Goles por Equipo
-    </div>
-    <div class="card-body">
-      <div class="d-flex justify-content-center">
-        <div>{{ grafico_barras | safe }}</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="mb-4">
-    <a href="/descargar/excel" class="btn btn-success me-2">📥 Descargar Excel</a>
-    <a href="/descargar/pdf" class="btn btn-danger">📄 Descargar PDF</a>
-</div>
- <!-- Footer -->
-    <footer class="bg-light text-center text-lg-start mt-5 border-top">
-      <div class="container py-3">
-        <div class="row align-items-center">
-          <div class="col-md-6 text-md-start text-center mb-2 mb-md-0">
-            <span class="text-muted"
-              >© {{ current_year }} Champions League Analyzer</span
-            >
-          </div>
-          <div class="col-md-6 text-md-end text-center">
-            <a
-              href="https://github.com/cristianriveraxd/Analisis-Predictivo-de-Resultados"
-              class="text-decoration-none me-3"
-              target="_blank"
-            >
-              <i class="bi bi-github"></i> GitHub
-            </a>
-            <a href="/" class="text-decoration-none">
-              <i class="bi bi-house-door-fill"></i> Inicio
-            </a>
-          </div>
-        </div>
-      </div>
-    </footer>
 </body>
 </html>
