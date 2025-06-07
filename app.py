@@ -233,7 +233,8 @@ def goles_local_vs_visitante():
                            interseccion=round(interseccion, 2),
                            r2=round(r2, 3),
                            plot_url=plot_path,
-                           output_url="static/grafo.png")
+                           output_url="static/grafo.png",
+                           current_year=datetime.now().year)
 
 @app.route('/')
 def index():
