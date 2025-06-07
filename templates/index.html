@@ -67,14 +67,32 @@
           </tr>
         </thead>
         <tbody>
-          {% for equipo in equipos %}
-          <tr>
-            <td>{{ equipo.Equipo }}</td>
-            <td>{{ equipo.Partidos }}</td>
-            <td>{{ equipo.Puntos }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
+  {% for equipo in equipos %}
+  <tr
+    {% if loop.index == 1 %}
+      class="table-warning fw-bold" style="color:gold"
+    {% elif loop.index == 2 %}
+      class="table-secondary fw-bold" style="color:silver"
+    {% elif loop.index == 3 %}
+      class="table-danger fw-bold" style="color:peru"
+    {% endif %}
+  >
+    <td>
+      {% if loop.index == 1 %}
+        🥇
+      {% elif loop.index == 2 %}
+        🥈
+      {% elif loop.index == 3 %}
+        🥉
+      {% endif %}
+      {{ equipo.Equipo }}
+    </td>
+    <td>{{ equipo.Partidos }}</td>
+    <td>{{ equipo.Puntos }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+
       </table>
     {% endif %}
   </div>
