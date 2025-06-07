@@ -41,6 +41,7 @@ Este proyecto realiza un análisis técnico de datos deportivos utilizando técn
 ## 🔄 Pipeline de datos
 
 El flujo de datos sigue una arquitectura moderna tipo ​*data lakehouse*​, integrando fuentes externas y procesamiento ETL:
+![image](https://github.com/user-attachments/assets/f04923fa-8811-46da-8ccc-0c15d4e2c5a5)
 
 1. ​**Fuentes de datos**​: API externa o base de datos.
 2. ​**Ingesta**​: Extracción vía batch o CDC.
