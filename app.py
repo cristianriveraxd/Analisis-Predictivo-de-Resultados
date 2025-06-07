@@ -12,7 +12,7 @@ import os
 import plotly.express as px
 import plotly.io as pio
 from datetime import datetime
-
+from html2image import Html2Image
 
 app = Flask(__name__)
 
@@ -94,13 +94,19 @@ def crear_grafico_por_equipo(matches, equipo_filtrado=None):
 
     fig = px.line(df_evolucion, x="Jornada", y="Goles", color="Equipo", markers=True,
                   title="Evolución de Goles por Equipo", width=900, height=500)
-    return pio.to_html(fig, full_html=False)
+   
 def crear_grafico_barras(df):
     fig = px.bar(df, x="Equipo", y="GolesFavor", color="Equipo",
                  title="Total de Goles a Favor por Equipo", 
                  labels={"GolesFavor": "Goles a Favor"},
                  hover_data=["Partidos", "Puntos"],
                  width=900, height=500)
+    hti = Html2Image()
+    hti.screenshot(
+    html_str=pio.to_html(fig, full_html=True),
+    save_as="barras_grafo.png",
+    size=(1500, 1100)
+)   
     return pio.to_html(fig, full_html=False)
 @app.route("/dashboard")
 def dashboard():
@@ -291,15 +297,10 @@ def index():
         for equipo, datos in puntos_por_equipo.items()
     ]).sort_values(by='Puntos', ascending=False)
 
-    for idx, row in df.iterrows():
-        max_puntos_posibles = row['Partidos'] * 3
-        if row['Puntos'] > max_puntos_posibles:
-            print(f"ERROR: Equipo {row['Equipo']} tiene {row['Puntos']} puntos pero solo {row['Partidos']} partidos.")
-
     # Regresión lineal
     X = df[['Partidos']]
     y = df['Puntos']
-    modelo = LinearRegression(fit_intercept=False).fit(X, y)
+    modelo = LinearRegression().fit(X, y)
     pendiente = modelo.coef_[0]
     interseccion = modelo.intercept_
     r2 = modelo.score(X, y)
