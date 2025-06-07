@@ -113,6 +113,7 @@ def crear_grafico_barras(df):
     size=(1500, 1100)
 )   
     return pio.to_html(fig, full_html=False)
+
 @app.route("/dashboard")
 def dashboard():
     equipo = request.args.get("equipo")
@@ -302,10 +303,16 @@ def index():
         for equipo, datos in puntos_por_equipo.items()
     ]).sort_values(by='Puntos', ascending=False)
 
+    for idx, row in df.iterrows():
+        max_puntos_posibles = row['Partidos'] * 3
+        if row['Puntos'] > max_puntos_posibles:
+            print(f"ERROR: Equipo {row['Equipo']} tiene {row['Puntos']} puntos pero solo {row['Partidos']} partidos.")
+
+
     # Regresión lineal
     X = df[['Partidos']]
     y = df['Puntos']
-    modelo = LinearRegression().fit(X, y)
+    modelo = LinearRegression(fit_intercept=False).fit(X, y)
     pendiente = modelo.coef_[0]
     interseccion = modelo.intercept_
     r2 = modelo.score(X, y)
