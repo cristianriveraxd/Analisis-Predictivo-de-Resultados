@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 6px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+    <title>Reporte PDF</title>
+</head>
+<body>
+    <h2 style="text-align:center;">Reporte de Estadísticas de Equipos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Equipo</th>
+                <th>Partidos</th>
+                <th>Puntos</th>
+                <th>Goles a Favor</th>
+                <th>Goles en Contra</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in tabla %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ fila.Equipo }}</td>
+                <td>{{ fila.Partidos }}</td>
+                <td>{{ fila.Puntos }}</td>
+                <td>{{ fila.GolesFavor }}</td>
+                <td>{{ fila.GolesContra }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

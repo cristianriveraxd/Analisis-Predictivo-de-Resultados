@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
+import io
 import requests
 import pandas as pd
 import networkx as nx
@@ -11,6 +12,8 @@ import os
 import plotly.express as px
 import plotly.io as pio
 from datetime import datetime
+
+
 app = Flask(__name__)
 
 API_KEY = '8778d28069434fbd8dc0e71d71120869'
@@ -324,6 +327,34 @@ def index():
                            plot_url="static/plot.png",
                            output_url="static/grafo.png",
                            current_year=datetime.now().year)
+
+@app.route("/descargar/excel")
+def descargar_excel():
+    matches = cargar_datos()
+    df = procesar_estadisticas(matches)
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        df.to_excel(writer, index=False, sheet_name="Estadísticas")
+    output.seek(0)
+    return send_file(output, download_name="Datos Equipos.xlsx", as_attachment=True)
+
+@app.route("/descargar/pdf")
+def descargar_pdf():
+    from xhtml2pdf import pisa
+    from flask import make_response
+    matches = cargar_datos()
+    df = procesar_estadisticas(matches)
+    html = render_template("reporte_pdf.html", tabla=df.to_dict(orient="records"))
+
+    result = io.BytesIO()
+    pisa_status = pisa.CreatePDF(io.StringIO(html), dest=result)
+    if pisa_status.err:
+        return "Error al generar el PDF", 500
+
+    result.seek(0)
+    return send_file(result, download_name="Datos Equipo.pdf", as_attachment=True)
+
+
 
 if __name__ == '__main__':
     if not os.path.exists("static"):
