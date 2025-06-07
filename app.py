@@ -92,6 +92,13 @@ def crear_grafico_por_equipo(matches, equipo_filtrado=None):
     fig = px.line(df_evolucion, x="Jornada", y="Goles", color="Equipo", markers=True,
                   title="Evolución de Goles por Equipo", width=900, height=500)
     return pio.to_html(fig, full_html=False)
+def crear_grafico_barras(df):
+    fig = px.bar(df, x="Equipo", y="GolesFavor", color="Equipo",
+                 title="Total de Goles a Favor por Equipo", 
+                 labels={"GolesFavor": "Goles a Favor"},
+                 hover_data=["Partidos", "Puntos"],
+                 width=900, height=500)
+    return pio.to_html(fig, full_html=False)
 @app.route("/dashboard")
 def dashboard():
     equipo = request.args.get("equipo")
@@ -99,12 +106,14 @@ def dashboard():
     df_stats = procesar_estadisticas(matches)
     grafico_html = crear_grafico_general(df_stats)
     grafico_equipos = crear_grafico_por_equipo(matches, equipo_filtrado=equipo)
+    grafico_barras = crear_grafico_barras(df_stats)
     nombres_equipos = sorted(df_stats['Equipo'].unique())
 
     return render_template("dashboard.html", 
                            tabla=df_stats.to_dict(orient="records"), 
                            grafico=grafico_html,
                            grafico_equipos=grafico_equipos,
+                           grafico_barras=grafico_barras,
                            equipos=nombres_equipos,
                            equipo_seleccionado=equipo)
 
