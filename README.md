@@ -77,6 +77,13 @@ A través de gráficos generados dinámicamente, se analizan relaciones como:
 
 * **Grafos obtenidos**
   ![image](https://github.com/user-attachments/assets/0f4b12ac-2324-4584-a1d0-dafdd3ba3423)
+  
+* **Dashboard interactivo con accordions**
+  ![image](https://github.com/user-attachments/assets/d4cc9177-abe7-490c-8bbf-a384480c52f4)
+  ![image](https://github.com/user-attachments/assets/a50bc4a2-aa7c-4a44-845e-9174bd843e51)
+  ![image](https://github.com/user-attachments/assets/28c68bb0-2314-426e-bff0-882f3ae7d1a0)
+  ![image](https://github.com/user-attachments/assets/3f9fcb46-2a75-4ab0-9ed9-fd16ccdf2a5d)
+  ![image](https://github.com/user-attachments/assets/d75c72d9-0741-4e50-8c0a-4ef2eb806624)
 
 
 Cada gráfico incluye:
