@@ -21,6 +21,12 @@ def index():
         return render_template("index.html", error="No se pudieron obtener los partidos.")
 
     data = response.json()
+
+    # Guardar el JSON en un archivo local para revisar
+    with open('Partidos.json', 'w', encoding='utf-8') as f:
+        import json
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
     partidos = data.get('matches', [])
 
     puntos_por_equipo = {}
@@ -56,6 +62,10 @@ def index():
         {'Equipo': equipo, 'Partidos': data['Partidos'], 'Puntos': data['Puntos']}
         for equipo, data in puntos_por_equipo.items()
     ])
+
+    # Ordenar por puntos descendente
+    df = df.sort_values(by='Puntos', ascending=False)
+
 
     # Regresión lineal
     X = df[['Partidos']]
