@@ -164,6 +164,55 @@
 </form>
 
 <!-- Sección: Total de Goles por Equipo -->
+<div class="card shadow-sm">
+  <div class="card-header bg-dark text-white">
+    ⚽
+  </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-center">
+      <canvas id="futbolCanvas" width="300" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('futbolCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Césped
+  ctx.fillStyle = '#61b846';
+  ctx.fillRect(0, 0, 300, 200);
+
+  // Líneas de la cancha
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 2;
+
+  // Línea central
+  ctx.beginPath();
+  ctx.moveTo(150, 0);
+  ctx.lineTo(150, 200);
+  ctx.stroke();
+
+  // Círculo central
+  ctx.beginPath();
+  ctx.arc(150, 100, 30, 0, 2 * Math.PI);
+  ctx.stroke();
+
+  // Área de penalti izquierda
+  ctx.strokeRect(0, 50, 50, 100);
+
+  // Área de penalti derecha
+  ctx.strokeRect(250, 50, 50, 100);
+
+  // Porterías (simplificadas)
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 80, 10, 40);
+  ctx.fillRect(290, 80, 10, 40);
+</script>
+<br>
+ <h1 class="mb-4 text-center">
+        <i class="bi bi-sunset"></i> Total de Goles por Equipo
+      </h1>
 <section class="mt-5">
   <div class="card shadow-sm">
     <div class="card-header bg-dark text-white">
