@@ -16,6 +16,7 @@
       href="{{ url_for('static', filename='icon.svg') }}"
       type="image/x-icon"
     />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
   </head>
   <body>
     <div class="container py-5">
@@ -68,7 +69,10 @@
         </thead>
         <tbody>
           {% for equipo in equipos %}
-          <tr>
+           {% set pos = loop.index %}
+          <tr class="
+        {% if pos == 1 %}table-warning{% elif pos == 2 %}table-secondary{% endif %}
+      ">
             <td>{{ equipo.Equipo }}</td>
             <td>{{ equipo.GolesLocal }}</td>
             <td>{{ equipo.GolesVisitante }}</td>
