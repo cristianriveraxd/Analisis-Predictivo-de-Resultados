@@ -8,12 +8,73 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import json
 import os
+import plotly.express as px
+import plotly.io as pio
 
 app = Flask(__name__)
 
 API_KEY = '8778d28069434fbd8dc0e71d71120869'
 HEADERS = {'X-Auth-Token': API_KEY}
 MATCHES_URL = "https://api.football-data.org/v4/competitions/CL/matches"
+
+#dashboard
+def cargar_datos():
+    with open("Partidos.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data["matches"]
+
+def procesar_estadisticas(matches):
+    equipos = {}
+
+    for match in matches:
+        if match['status'] != 'FINISHED':
+            continue
+
+        home = match['homeTeam']['name']
+        away = match['awayTeam']['name']
+        goals_home = match['score']['fullTime']['home']
+        goals_away = match['score']['fullTime']['away']
+
+        for equipo in [home, away]:
+            if equipo not in equipos:
+                equipos[equipo] = {'Equipo': equipo, 'Partidos': 0, 'GolesFavor': 0, 'GolesContra': 0, 'Puntos': 0}
+
+        equipos[home]['Partidos'] += 1
+        equipos[away]['Partidos'] += 1
+        equipos[home]['GolesFavor'] += goals_home
+        equipos[home]['GolesContra'] += goals_away
+        equipos[away]['GolesFavor'] += goals_away
+        equipos[away]['GolesContra'] += goals_home
+
+        if goals_home > goals_away:
+            equipos[home]['Puntos'] += 3
+        elif goals_home < goals_away:
+            equipos[away]['Puntos'] += 3
+        else:
+            equipos[home]['Puntos'] += 1
+            equipos[away]['Puntos'] += 1
+
+    df = pd.DataFrame(equipos.values())
+    df = df.sort_values(by=["Puntos", "GolesFavor"], ascending=False).reset_index(drop=True)
+    return df
+
+def crear_grafico(df):
+    fig = px.scatter(
+        df, x="GolesContra", y="GolesFavor", size="Puntos", color="Equipo",
+        hover_name="Equipo", text="Equipo",
+        title="Goles a Favor vs Goles en Contra",
+        labels={"GolesFavor": "Goles a Favor", "GolesContra": "Goles en Contra"},
+        width=800, height=600
+    )
+    fig.update_traces(textposition='top center')
+    return pio.to_html(fig, full_html=False)
+@app.route("/dashboard")
+def dashboard():
+    matches = cargar_datos()
+    df_stats = procesar_estadisticas(matches)
+    grafico_html = crear_grafico(df_stats)
+    return render_template("dashboard.html", tabla=df_stats.to_dict(orient="records"), grafico=grafico_html)
+
 
 
 def generar_grafo(partidos):
