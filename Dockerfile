@@ -1,24 +1,25 @@
-FROM python:3.12-slim
+FROM python:3.12
 
-# Evita prompts interactivos
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Instala dependencias del sistema necesarias para compilar extensiones de Python
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    build-essential \
+    chromium \
+    chromium-driver \
     pkg-config \
-    default-libmysqlclient-dev \
     libmariadb-dev-compat \
-    gcc \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    libmariadb-dev \
+    && apt-get clean
 
-# Copiar archivos de la aplicación
+# Crear directorio de trabajo
 WORKDIR /app
+
+# Copiar archivos del proyecto
 COPY . .
 
-# Instalar las dependencias Python
+# Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Exponer el puerto
+EXPOSE 5000
 
 # Comando por defecto
 CMD ["python3", "app.py"]
