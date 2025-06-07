@@ -1,17 +1,24 @@
-# Usa una imagen oficial de Python como base
 FROM python:3.12-slim
 
-# Establece el directorio de trabajo
+# Evita prompts interactivos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instala dependencias del sistema necesarias para compilar extensiones de Python
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    pkg-config \
+    default-libmysqlclient-dev \
+    libmariadb-dev-compat \
+    gcc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar archivos de la aplicación
 WORKDIR /app
+COPY . .
 
-# Copia los archivos al contenedor
-COPY . /app
-
-# Instala las dependencias
+# Instalar las dependencias Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expón el puerto 5000
-EXPOSE 5000
-
-# Ejecuta la app
-CMD ["python", "app.py"]
+# Comando por defecto
+CMD ["python3", "app.py"]
