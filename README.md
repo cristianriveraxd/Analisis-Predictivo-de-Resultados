@@ -154,4 +154,4 @@ Cada gráfico incluye:
 
 ## 📜 Licencia
 
-Este proyecto se distribuye bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+Proyecto académico para la materia de Bases de Datos III – ETITC Bogotá, bajo fines educativos.
